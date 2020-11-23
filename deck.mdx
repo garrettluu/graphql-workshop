@@ -389,6 +389,8 @@ mutation {
 # Live coding: build a GraphQL API
 ## Now it's time for the ~~hard~~ **fun** part!
 
+We will be building an API for Pokemon entries in a database
+
 
 </Section>
 
@@ -426,3 +428,454 @@ Go download [Node.js](https://nodejs.org/en/download/) if you haven't already!
 	- **Node** allows you to run JavaScript <b>outside of the browser</b> (servers, desktop, etc.)
 	- **Express** is a <b>framework</b> for Node that makes developing servers or APIs easier
 - I highly recommend you watch the Hack School workshop on APIs!
+- But try to follow along even if you don't understand everything!
+
+<HackFooter/>
+
+---
+
+<CodeSurfer>
+
+```js title="app.js starter code"
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+
+const app = express();
+
+// GraphQL setup
+const { ApolloServer } = require('apollo-server-express');
+const { typeDefs, resolvers } = require('./schema');
+
+const apollo = new ApolloServer({typeDefs, resolvers});
+apollo.applyMiddleware({app});
+
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
+
+module.exports = app;
+```
+
+```diff 13:17 subtitle="This is the stuff we care about"
+```
+
+```diff 14,16 subtitle="We will be writing the typedefs and resolvers ourselves"
+```
+
+</CodeSurfer>
+
+---
+
+<Section>
+
+# Typedefs and Resolvers
+## _How_ do we fetch data?
+
+</Section>
+
+<HackFooter/>
+
+---
+
+# Typedefs
+
+Typedefs = Schema of your data
+
+**Syntax** - write GraphQL inside of JavaScript code:
+
+```js
+const { gql } = require('apollo-server-express');
+const typeDefs = gql`
+    type Move {
+        name: String!
+        power: Int!
+	}
+	# ...
+`;
+```
+
+<HackFooter/>
+
+---
+
+## **Let's write our `typedefs.js` file!**  👨‍💻
+
+<HackFooter/>
+
+---
+
+<CodeSurfer>
+
+```js title="Writing typdefs"
+const { gql } = require('apollo-server-express');
+const typeDefs = gql`
+	
+	# TODO
+
+`;
+```
+
+```js title="Writing typdefs" subtitle="Let's start by adding our Move type"
+const { gql } = require('apollo-server-express');
+const typeDefs = gql`
+	type Move {
+		name: String!
+		power: Int!
+	}
+`;
+```
+
+```js title="Writing typdefs" subtitle="Now for the Pokemon type"
+const { gql } = require('apollo-server-express');
+const typeDefs = gql`
+	type Move {
+		name: String!
+		power: Int!
+	}
+	type Pokemon {
+		name: String!
+		description: String!
+		type1: String!
+		type2: String
+		moves: [Move]!
+	}
+`;
+```
+
+```js title="Writing typdefs" subtitle="Next up: queries!"
+const { gql } = require('apollo-server-express');
+const typeDefs = gql`
+	type Move {
+		name: String!
+		power: Int!
+	}
+	type Pokemon {
+		name: String!
+		description: String!
+		type1: String!
+		type2: String
+		moves: [Move]!
+	}
+	type Query {
+		pokemon(name: String): Pokemon
+		pokemonByType(type: String): [Pokemon]
+	}
+`;
+```
+
+```diff 15 title="Writing typedefs" subtitle="Search for a Pokemon by name"
+```
+
+```diff 16 title="Writing typedefs" subtitle="Search for multiple Pokemon by type"
+```
+
+```js title="Writing typdefs" subtitle="Let's write 2 mutations"
+const { gql } = require('apollo-server-express');
+const typeDefs = gql`
+	type Move {
+		name: String!
+		power: Int!
+	}
+	type Pokemon {
+		name: String!
+		description: String!
+		type1: String!
+		type2: String
+		moves: [Move]!
+	}
+	type Query {
+		pokemon(name: String): Pokemon
+		pokemonByType(type: String): [Pokemon]
+	}
+	type Mutation {
+		addPokemon(name: String, description: String, type1: String, type2: String): Pokemon
+        addMoveToPokemon(name: String, moveName: String, movePower: Int): Move
+	}
+`;
+```
+
+```diff 19 title="Writing typedefs" subtitle="Add a Pokemon (with no moves 😔)"
+```
+
+```diff 20 title="Writing typedefs" subtitle="Add a move to a Pokemon"
+```
+
+</CodeSurfer>
+
+---
+
+# Resolvers
+
+The <b>plumbing</b> behind everything
+
+- Now it's time to actually write <b>how</b> our queries and mutations are gonna get/modify data
+- We're working with a simple JSON document as a mock database
+	- Usually, you'll hook into a real database like MongoDB or MySQL
+ 
+<HackFooter/>
+
+---
+
+## **Now it's time to fill in `resolvers.js`** 👨‍💻
+
+---
+
+<CodeSurfer>
+
+```js title="Resolvers"
+const resolvers = {
+    // TODO: Fill in this part!
+};
+```
+
+```js title="Resolvers" subtitle="Import our mock database"
+let mockData = require('../mockData.json');
+const resolvers = {
+    // TODO: Fill in this part!
+};
+```
+
+```js title="Resolvers" subtitle="Let's start with queries"
+let mockData = require('../mockData.json');
+const resolvers = {
+	Query: {
+		pokemon(parent, args, context, info) {
+			// ^^^ what's up with these parameters? ^^^
+		}
+	}
+};
+```
+
+```diff 4[17:22] title="Resolvers" subtitle="parent deals with chaining resolvers (more advanced stuff)"
+```
+
+```diff 4[25:28] title="Resolvers" subtitle="args holds the arguments we passed in to our query"
+```
+
+```diff 4[31:37] title="Resolvers" subtitle="context is shared between ALL resolvers"
+```
+
+```diff 4[40:43] title="Resolvers" subtitle="info contains info about the current state of the operation"
+```
+
+```js title="Resolvers" subtitle="Find the first Pokemon with the name given"
+let mockData = require('../mockData.json');
+const resolvers = {
+	Query: {
+		pokemon(parent, args, context, info) {
+			return mockData.pokemon.find((p) => p.name === args.name);
+		}
+	}
+};
+```
+
+```js title="Resolvers" subtitle="Next up: search by type"
+let mockData = require('../mockData.json');
+const resolvers = {
+	Query: {
+		pokemon(parent, args, context, info) {
+			return mockData.pokemon.find((p) => p.name === args.name);
+		},
+		pokemonByType(parent, args, context, info) {
+            return mockData.pokemon.filter((p) => (
+				(p.type1 === args.pokemonType) ||
+				((p.type2) && (p.type2 === args.pokemonType))
+			));
+        }
+	}
+};
+```
+
+```diff 9,10 title="Resolvers" subtitle="We need to make sure we match either type!"
+```
+
+</CodeSurfer>
+
+---
+
+# Sanity check
+
+Let's stop and make sure our queries work as intended.
+
+- Do we get the correct responses?
+- Edge case: `pokemonByType(pokemonType: "Electric")`
+	- Pikachu has `type1` Electric, while Stunfisk has `type2`
+	- **Both should be returned**
+
+<HackFooter/>
+
+---
+
+<CodeSurfer>
+
+```js title="Now it's time for mutations..."
+let mockData = require('../mockData.json');
+const resolvers = {
+	Query: {
+		pokemon(parent, args, context, info) {
+			return mockData.pokemon.find((p) => p.name === args.name);
+		},
+		pokemonByType(parent, args, context, info) {
+            return mockData.pokemon.filter((p) => (
+				(p.type1 === args.pokemonType) ||
+				((p.type2) && (p.type2 === args.pokemonType))
+			));
+        }
+	}
+};
+```
+
+```js title="Now it's time for mutations..." subtitle="Same deal as before"
+let mockData = require('../mockData.json');
+const resolvers = {
+	Query: {
+		pokemon(parent, args, context, info) {
+			return mockData.pokemon.find((p) => p.name === args.name);
+		},
+		pokemonByType(parent, args, context, info) {
+            return mockData.pokemon.filter((p) => (
+				(p.type1 === args.pokemonType) ||
+				((p.type2) && (p.type2 === args.pokemonType))
+			));
+        }
+	},
+	Mutation: {
+		addPokemon(parent, args, context, info) {
+			
+		},
+		addMoveToPokemon(parent, args, context, info) {
+
+		}
+	}
+};
+```
+
+```js title="Now it's time for mutations..." subtitle="Create a new Pokemon, add it to the database"
+let mockData = require('../mockData.json');
+const resolvers = {
+	Query: {
+		pokemon(parent, args, context, info) {
+			return mockData.pokemon.find((p) => p.name === args.name);
+		},
+		pokemonByType(parent, args, context, info) {
+            return mockData.pokemon.filter((p) => (
+				(p.type1 === args.pokemonType) ||
+				((p.type2) && (p.type2 === args.pokemonType))
+			));
+        }
+	},
+	Mutation: {
+		addPokemon(parent, args, context, info) {
+			const newPokemon = {
+                name: args.name,
+                description: args.description,
+                type1: args.type1,
+                type2: args.type2,
+                moves: [],
+            };
+            mockData.pokemon.push(newPokemon);
+            return newPokemon;			
+		},
+		addMoveToPokemon(parent, args, context, info) {
+
+		}
+	}
+};
+```
+
+```js title="Now it's time for mutations..." subtitle="Create a new Move, add it to the Pokemon"
+let mockData = require('../mockData.json');
+const resolvers = {
+	Query: {
+		pokemon(parent, args, context, info) {
+			return mockData.pokemon.find((p) => p.name === args.name);
+		},
+		pokemonByType(parent, args, context, info) {
+            return mockData.pokemon.filter((p) => (
+				(p.type1 === args.pokemonType) ||
+				((p.type2) && (p.type2 === args.pokemonType))
+			));
+        }
+	},
+	Mutation: {
+		addPokemon(parent, args, context, info) {
+			const newPokemon = {
+                name: args.name,
+                description: args.description,
+                type1: args.type1,
+                type2: args.type2,
+                moves: [],
+            };
+            mockData.pokemon.push(newPokemon);
+            return newPokemon;			
+		},
+		addMoveToPokemon(parent, args, context, info) {
+			const newMove = {
+                name: args.moveName,
+                power: args.movePower,
+            }
+            const pokemon = mockData.pokemon.find((p) => p.name === args.name)
+            if (pokemon) {
+                pokemon.moves.push(newMove);
+                return newMove;
+            }
+		}
+	}
+};
+```
+
+</CodeSurfer>
+
+---
+
+# Final demo! 
+## Let's test out our newly written API!
+
+<HackFooter/>
+
+---
+
+# Additional Resources
+## If you wanna dive deeper into this stuff
+
+- This workshop barely scratched the surface on what's possible
+- [**Official GraphQL docs**](https://gRaphql.org/learn/)
+	- Read all about the main <b>concepts</b>
+- [**Apollo Server Docs**](https://www.apollogRaphql.com/docs/apollo-server/)
+	- How to actually <b>implement</b> GraphQL into your server
+- [**Apollo Client Docs**](https://www.apollogRaphql.com/docs/react/)
+	- Make requests from a React website
+
+<HackFooter/>

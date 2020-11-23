@@ -1,0 +1,23 @@
+{
+  "name": "graphql-workshop-slides",
+  "version": "1.0.0",
+  "description": "ACM Hack GraphQL Workshop slides",
+  "main": "index.js",
+  "scripts": {
+    "start": "mdx-deck deck.mdx",
+    "build": "mdx-deck build deck.mdx"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/garrettluu/graphql-workshop-slides.git"
+  },
+  "author": "Garrett Luu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/garrettluu/graphql-workshop-slides/issues"
+  },
+  "homepage": "https://github.com/garrettluu/graphql-workshop-slides#readme",
+  "devDependencies": {
+    "mdx-deck": "^4.1.1"
+  }
+}

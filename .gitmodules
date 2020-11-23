@@ -1,0 +1,3 @@
+[submodule "hack-slide-template"]
+	path = hack-slide-template
+	url = https://github.com/garrettluu/hack-slide-template

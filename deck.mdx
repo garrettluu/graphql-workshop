@@ -1,0 +1,428 @@
+<!--Layouts-->
+import Title from './hack-slide-template/layouts/Title';
+import CheckIn from './hack-slide-template/layouts/CheckIn';
+import Section from './hack-slide-template/layouts/Section';
+import SectionNumber from './hack-slide-template/layouts/SectionNumber';
+import { CodeSurfer, CodeSurferColumns, Step } from 'code-surfer';
+
+<!-- Components -->
+import HackFooter from './hack-slide-template/components/HackFooter';
+
+<!-- Theme -->
+import hackTheme from './hack-slide-template/theme';
+export const theme = hackTheme;
+
+<Title>
+
+# GraphQL Workshop 🌶
+
+## Spice up your servers and APIs
+
+
+</Title>
+
+---
+
+<CheckIn
+    code="graphQL"
+/>
+
+<HackFooter/>
+
+---
+
+# About these slides...
+
+- These slides were made with [`mdx-deck`](https://github.com/jxnblk/mdx-deck)!
+
+- Use the left and right arrow keys to navigate between them.
+
+**Note:** These slides are NOT responsive (i'm bad at css lol) so it's best to view them in a large screen
+
+## **Anyway, let's begin!**
+
+<HackFooter/>
+
+---
+
+<Section>
+
+# Introduction
+## What even is GraphQL???
+
+</Section>
+
+<HackFooter/>
+
+---
+
+# What even is GraphQL???
+
+- **Graph** **Q**uery **L**anguage
+- Query language for your APIs
+    - **Client-side**: A system for <b>getting</b> and <b>modifying</b> data
+    - **Server-side**: A system for <b>executing these requests</b> from the client
+
+## But why should we bother when **REST** APIs exist?
+
+<HackFooter/>
+
+---
+
+# Why use GraphQL?
+
+- Structured data! You'll know exactly what form your data will take.
+- **One** endpoint, **one** request
+    - A typical REST API might have some back-and-forth to get all the data you need
+- It's kinda cool 😁
+
+<HackFooter/>
+
+---
+
+# Demo
+
+---
+
+<Section>
+
+# The Basics
+## We'll be going over:
+
+1. Schemas
+2. Queries
+3. Mutations
+
+</Section>
+
+<HackFooter/>
+
+---
+
+<SectionNumber number={1} text="Schemas"/>
+
+## The <b>blueprints</b> for everything
+
+---
+
+# Built-in types
+
+## The meat and potatoes 🥩🥔
+
+- `Int`, `Float`, `String`, `Boolean`, `ID`
+    - These are pretty much the same as in any other language
+    - The **ID** type is a bit special
+        - Behaves like a **String**, but used as a <b>unique identifier</b>
+        - Similar to `_id` field in MongoDB
+
+<HackFooter/>
+
+---
+
+# Object types
+## Objectively very cool 😎
+
+- Think like **classes** in Java or C++
+- Similar to **schemas** in Mongoose (MongoDB framework)
+
+```ts
+type Pokemon {
+    name: String!
+	description: String!
+	type1: String!
+	type2: String
+	moves: [Move]!
+}
+```
+
+<HackFooter/>
+
+--- 
+
+<CodeSurfer>
+
+```js title="Quick example: Pokemon"
+type Pokemon {
+    name: String!
+	description: String!
+	type1: String!
+	type2: String
+	moves: [Move]!
+}
+```
+
+```js 2 title="Quick example: Pokemon" subtitle="'!' means the field is required"
+type Pokemon {
+    name: String!
+	description: String!
+	type1: String!
+	type2: String
+	moves: [Move]!
+}
+```
+
+```js 2 title="Quick example: Pokemon" subtitle="We can also write comments!"
+type Pokemon {
+    name: String! # This is a comment
+	description: String!
+	type1: String!
+	type2: String
+	moves: [Move]!
+}
+```
+
+```js 6 title="Quick example: Pokemon" subtitle="'Move' is its own type"
+type Pokemon {
+    name: String! # This is a comment
+	description: String!
+	type1: String!
+	type2: String
+	moves: [Move]!
+}
+```
+
+```js 6[12,17] title="Quick example: Pokemon" subtitle="[] denotes a list/array of items"
+type Pokemon {
+    name: String! # This is a comment
+	description: String!
+	type1: String!
+	type2: String
+	moves: [Move]!
+}
+```
+
+</CodeSurfer>
+
+---
+
+# Other stuff...
+
+**Enums** - type with <b>fixed</b> number of possible values
+
+```js
+enum PokemonType {
+    WATER
+    FIRE
+    GRASS
+    # not gonna list all 18 types lol
+}
+```
+
+<HackFooter/>
+
+---
+
+**Interfaces** - allows you to extend and build other types from them
+
+```js
+interface AcmMember {
+	name: String!
+	points: Number!
+	likeToCode: Boolean!
+}
+
+type HackMember implements AcmMember {
+	inHackSchool: Boolean!
+	likesJavaScript: Boolean!
+}
+```
+
+<HackFooter/>
+
+---
+
+**Union** - allows you to "join" multiple types
+
+```js
+union Example = Boba | Pizza
+```
+
+In this example, `Example` can be either type `Boba` or `Pizza`.
+
+<HackFooter/>
+
+---
+
+<SectionNumber number={2} text="Queries"/>
+
+## Now for the fun stuff!
+
+
+<HackFooter/>
+
+---
+
+# Intro to Queries
+
+- Special type in GraphQL, for the client to interact with it
+    - Every GraphQL service uses this type
+- Can technically modify data, but <b>bad practice</b> to do so
+    - Think of these like `GET` requests in REST
+
+<HackFooter/>
+
+---
+
+<CodeSurferColumns>
+
+<Step>
+
+```js title="What we ask for"
+query {
+	pokemon {
+		name
+		type1
+	}
+}
+```
+
+```json title="What the server gives us"
+"data": {
+	"pokemon": {
+		"name": "Stunfisk",
+		"type1": "Ground"
+	}
+}
+```
+
+</Step>
+
+<Step subtitle="Notice how the shape of the data matches up!">
+
+```js 2:5 title="What we ask for"
+query {
+	pokemon {
+		name
+		type1
+	}
+}
+```
+
+```json 2:5 title="What the server gives us"
+"data": {
+	"pokemon": {
+		"name": "Stunfisk",
+		"type1": "Ground"
+	}
+}
+```
+
+</Step>
+    
+</CodeSurferColumns>
+
+---
+
+<CodeSurfer>
+
+```js title="Defining queries (server-side)" subtitle="Like REST, we need to define what queries are available to us"
+type Query {
+	pokemon(name: String): Pokemon
+	hackMembersJavaScript(likesJavaScript: Boolean): HackMember
+}
+```
+
+```js 2 title="Defining queries (server-side)" subtitle="pokemon takes a String and returns Pokemon with the same name"
+type Query {
+	pokemon(name: String): Pokemon
+	hackMembersJavaScript(likesJavaScript: Boolean): HackMember
+}
+```
+
+```js 3 title="Defining queries (server-side)" subtitle="This query looks for ACM Hack members based on if they like JS"
+type Query {
+	pokemon(name: String): Pokemon
+	hackMembersJavaScript(likesJavaScript: Boolean): HackMember
+}
+```
+
+</CodeSurfer>
+
+---
+
+## But how do we pass these <b>arguments</b>?
+
+We specify what we want when we make the request from the client
+
+```js
+query {
+	hackMembersJavaScript(likesJavaScript: true) {
+		name
+		points
+	}
+}
+```
+
+<HackFooter/>
+
+---
+
+<SectionNumber number={3} text="Mutations"/>
+
+## But not on your DNA
+
+<HackFooter/>
+
+---
+
+# Mutations
+- Special type, defines **modifications** to server-side data
+- Think of these like `POST`, `PUT`, etc.
+- Returns the object that was created
+	- We can specify which fields to return
+
+```js
+mutation {
+	addAcmMember(name: "Garrett", points: 385, likesToCode: true) {
+		name
+		likesToCode
+	}
+}
+```
+
+<HackFooter/>
+
+---
+
+<Section>
+
+# Live coding: build a GraphQL API
+## Now it's time for the ~~hard~~ **fun** part!
+
+
+</Section>
+
+<HackFooter/>
+
+---
+
+# We'll be building our API using:
+
+1. **Express** and **Node.js**
+
+Go download [Node.js](https://nodejs.org/en/download/) if you haven't already!
+
+2. **Apollo**, a GraphQL implementation
+
+<HackFooter/>
+
+---
+
+# Starter Code
+
+[acmurl.com/gql-code](https://acmurl.com/gql-code)
+
+- Download the code and follow along
+- Feel free to ask questions if you're confused or if I'm going too fast
+
+<HackFooter/>
+
+---
+
+# What is all this stuff?
+
+- If you're new to **Node**, **Express**, or even **JavaScript** in general, this might be overwhelming
+- Super general explanation:
+	- **Node** allows you to run JavaScript <b>outside of the browser</b> (servers, desktop, etc.)
+	- **Express** is a <b>framework</b> for Node that makes developing servers or APIs easier
+- I highly recommend you watch the Hack School workshop on APIs!

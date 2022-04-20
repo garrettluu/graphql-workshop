@@ -1,0 +1,25 @@
+{
+  "name": "hack-slide-template",
+  "version": "1.0.0",
+  "description": "MDX Deck slide templates for ACM Hack workshops",
+  "main": "index.js",
+  "scripts": {
+    "start": "mdx-deck example.mdx"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/garrettluu/hack-slide-template.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/garrettluu/hack-slide-template/issues"
+  },
+  "homepage": "https://github.com/garrettluu/hack-slide-template#readme",
+  "devDependencies": {
+    "mdx-deck": "^4.0.0"
+  },
+  "dependencies": {
+    "theme-ui": "^0.3.3"
+  }
+}

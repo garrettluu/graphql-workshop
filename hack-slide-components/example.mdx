@@ -1,0 +1,68 @@
+import { Invert } from 'mdx-deck';
+
+import Title from './layouts/Title';
+import CheckIn from './layouts/CheckIn';
+import Section from './layouts/Section';
+import SectionNumber from './layouts/SectionNumber';
+import TextSlide from './layouts/TextSlide';
+import HackFooter from './components/HackFooter';
+
+import hackTheme from './theme';
+export const theme = hackTheme;
+
+import hackLogo from './images/logo-with-text.svg';
+
+
+# Hack Slides
+
+<HackFooter/>
+
+---
+
+# Titles
+## For beginning presentations
+<HackFooter/>
+
+---
+
+<Title>
+
+# Lorem Ipsum
+## Dolor sit amet
+
+</Title>
+
+---
+
+<CheckIn
+    code="l33t"
+/>
+
+---
+
+<Section>
+
+# Lorem Ipsum
+## Dolor sit amet
+
+</Section>
+
+---
+
+<SectionNumber number="1" text="Lorem ipsum dolor"/>
+
+---
+
+<SectionNumber number="2" text="Lorem ipsum dolor"/>
+
+---
+
+<SectionNumber number="3" text="Lorem ipsum dolor"/>
+
+---
+
+<TextSlide>
+
+This is a test with a **really long line** I hope it still wraps and looks kinda good pls? What else do I type anymore
+
+</TextSlide>
